@@ -5,6 +5,8 @@ void main() {
     int minutos = 0;
     int horas = 0;
 
+    int numeros[2] = {6,2};
+
     printf("Informe o tempo em segundos\n");
     scanf("%d", &segundos);
 
