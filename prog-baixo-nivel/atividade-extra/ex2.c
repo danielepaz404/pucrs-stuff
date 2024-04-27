@@ -128,4 +128,6 @@ void main () {
 
         printf("\n");
     }
+
+    // liberar memoria de cada malloc
 }
