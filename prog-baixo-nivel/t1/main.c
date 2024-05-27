@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct
 {
@@ -12,6 +13,7 @@ Pixel **vetor;
 int colunas = 0;
 int linhas = 0;
 int valor = 0;
+char formato[2];
 
 void escala_cinza(){
     FILE* fp_cinza = fopen("florzinha_cinza.ppm", "w");
@@ -46,7 +48,7 @@ void negativa(){
         exit(1);
     }
 
-    fprintf(fp_negativa, "P3\n");
+    fprintf(fp_negativa, "%s\n", formato);
     fprintf(fp_negativa, "%d %d\n", colunas, linhas);
     fprintf(fp_negativa, "%d\n", valor);
 
@@ -73,7 +75,7 @@ void envelhecida(){
         exit(1);
     }
 
-    fprintf(fp_envelhecida, "P3\n");
+    fprintf(fp_envelhecida, "%s\n", formato);
     fprintf(fp_envelhecida, "%d %d\n", colunas, linhas);
     fprintf(fp_envelhecida, "%d\n", valor);
 
@@ -100,7 +102,7 @@ void rotacionada(){
         exit(1);
     }
 
-    fprintf(fp_rotacionada, "P3\n");
+    fprintf(fp_rotacionada,"%s\n", formato);
     fprintf(fp_rotacionada, "%d %d\n", colunas, linhas);
     fprintf(fp_rotacionada, "%d\n", valor);
 
@@ -127,7 +129,7 @@ void aumentar_brilho(){
         exit(1);
     }
 
-    fprintf(fp_mais_brilho, "P3\n");
+    fprintf(fp_mais_brilho, "%s\n", formato);
     fprintf(fp_mais_brilho, "%d %d\n", colunas, linhas);
     fprintf(fp_mais_brilho, "%d\n", valor);
 
@@ -154,7 +156,7 @@ void diminuir_brilho(){
         exit(1);
     }
 
-    fprintf(fp_menos_brilho, "P3\n");
+    fprintf(fp_menos_brilho, "%s\n", formato);
     fprintf(fp_menos_brilho, "%d %d\n", colunas, linhas);
     fprintf(fp_menos_brilho, "%d\n", valor);
 
@@ -174,13 +176,17 @@ void diminuir_brilho(){
     fclose(fp_menos_brilho);
 }
 
-
-
 void main() {
-    FILE *fp = fopen("florzinha.ppm", "r");
+    char nome_imagem[30];
+
+    printf("Qual o nome da image *.ppm?\n");
+    scanf("%s", nome_imagem);
+
+    strcat(nome_imagem, ".ppm");
+
+    FILE *fp = fopen(nome_imagem, "r");
 
     // leitura do formato
-    char formato[3];
     fscanf(fp, "%s", formato);
 
     // leitura do tamanho da imagem
@@ -196,20 +202,42 @@ void main() {
 
         for(int j = 0; j < colunas; j++) {
             
-            vetor[i][j].R = 0;
-            vetor[i][j].G = 0;
-            vetor[i][j].B = 0;
-
             fscanf(fp, "%d %d %d", &vetor[i][j].R, &vetor[i][j].G, &vetor[i][j].B);
         }
     }
 
     fclose(fp);
 
-    //escala_cinza();
-    //negativa();
-    //aumentar_brilho();
-    //diminuir_brilho();
-    rotacionada();
-    //envelhecida();
+    printf("Qual transformação vc deseja fazer?\n1) Gerar uma imagem tons de cinza;\n2) Imagem tons de cinza -  gerar imagem negativa;\n3) Imagem tons de cinza - aumentar o brilho;\n4) Imagem tons de cinza - diminuir o brilho;\n5) Rotacionar a imagem colorida – 90º;\n6) Imagem colorida - envelhecimento da imagem;\n");
+
+    int escolha;
+    scanf("%d", &escolha);
+
+    switch(escolha){
+        case 1:
+            escala_cinza();
+            break;
+        case 2:
+            negativa();
+            break;
+        case 3:
+            aumentar_brilho();
+            break;
+        case 4:
+            diminuir_brilho();
+            break;
+        case 5:
+            rotacionada();
+            break;
+        case 6:
+            envelhecida();
+            break;
+    }
+
+    for(int i = 0; i < linhas; i++) {
+        free(vetor[i]);
+    }
+
+    free(vetor);
+
 }
